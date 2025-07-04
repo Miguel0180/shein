@@ -1,4 +1,4 @@
-# SHEIN Fictício - Banco de Dados PostgreSQL
+# SHEIN - Banco de Dados PostgreSQL
 
 Bem-vindo ao **SHEIN Fictício**, um projeto de banco de dados criado para simular o backend de uma loja online de moda, inspirado na famosa SHEIN! 👗👚🛒
 
