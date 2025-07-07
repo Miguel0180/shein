@@ -134,6 +134,53 @@ insert into pagamentos (id_pedido, metodo_pagamento, valor_total, status_pagamen
 (3, 'boleto', 149.70, 'pendente');
 
 -- ========================================
+-- 11. tabela de favoritos dos clientes
+-- ========================================
+create table favoritos (
+    id_favorito serial primary key,
+    id_cliente integer references clientes(id_cliente),
+    id_produto integer references produtos(id_produto),
+    data_adicionado timestamp default current_timestamp,
+    unique(id_cliente, id_produto) -- evita duplicatas
+);
+
+-- ========================================
+-- 12. tabela carrinho de compras
+-- ========================================
+create table carrinho (
+    id_item_carrinho serial primary key,
+    id_cliente integer references clientes(id_cliente),
+    id_produto integer references produtos(id_produto),
+    quantidade integer not null,
+    preco_unitario numeric(10, 2) not null,
+    data_adicionado timestamp default current_timestamp,
+    unique(id_cliente, id_produto)
+);
+
+-- inserções exemplo de itens no carrinho
+insert into carrinho (id_cliente, id_produto, quantidade, preco_unitario) values
+(1, 1, 1, 89.90),
+(1, 4, 2, 179.90),
+(2, 5, 3, 49.90);
+
+-- ========================================
+-- consulta: visualizar carrinho de um cliente
+-- ========================================
+select c.nome as cliente, p.nome as produto, cr.quantidade, cr.preco_unitario,
+       (cr.quantidade * cr.preco_unitario) as total_item, cr.data_adicionado
+from carrinho cr
+join clientes c on cr.id_cliente = c.id_cliente
+join produtos p on cr.id_produto = p.id_produto
+where c.email = 'miguel@gmail.com'
+order by cr.data_adicionado desc;
+
+-- Inserções exemplo de favoritos
+insert into favoritos (id_cliente, id_produto) values
+(1, 2), -- Miguel favoritou a calça jeans
+(1, 3), -- Miguel favoritou o brinco
+(2, 4); -- Marlon favoritou o tênis
+
+-- ========================================
 -- 10. consultas exemplo
 -- ========================================
 
@@ -194,3 +241,10 @@ group by c.nome;
 
 -- lista todas as categorias
 select id_categoria, nome from categorias order by nome;
+
+select f.id_favorito, c.nome as cliente, p.nome as produto, f.data_adicionado
+from favoritos f
+join clientes c on f.id_cliente = c.id_cliente
+join produtos p on f.id_produto = p.id_produto
+where c.email = 'miguel@gmail.com'
+order by f.data_adicionado desc;
