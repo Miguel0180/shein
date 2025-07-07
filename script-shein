@@ -4,23 +4,16 @@
 create database shein_ficticio;
 
 -- ========================================
--- 2. tabela categorias
+-- 2. tabelas
 -- ========================================
+
+-- categorias
 create table categorias (
     id_categoria serial primary key,
     nome varchar(100) not null
 );
 
-insert into categorias (nome) values
-('moda feminina'),
-('moda masculina'),
-('acessórios'),
-('calçados'),
-('infantil');
-
--- ========================================
--- 3. tabela clientes
--- ========================================
+-- clientes
 create table clientes (
     id_cliente serial primary key,
     nome varchar(100),
@@ -30,14 +23,7 @@ create table clientes (
     data_cadastro date default current_date
 );
 
-insert into clientes (nome, email, senha, pais) values
-('miguel teixeira', 'miguel@gmail.com', 'migs123', 'brasil'),
-('marlon franco', 'marlon@gmail.com', 'marlon123', 'portugal'),
-('cliente ficticio', 'cliente3@email.com', 'senha123', 'brasil');
-
--- ========================================
--- 4. tabela funcionarios
--- ========================================
+-- funcionarios
 create table funcionarios (
     id_funcionario serial primary key,
     nome varchar(100),
@@ -46,14 +32,7 @@ create table funcionarios (
     salario numeric(10, 2)
 );
 
-insert into funcionarios (nome, email, cargo, salario) values
-('carlos alberto', 'carlos@shein.com', 'estoquista', 2800.00),
-('fernanda dias', 'fernanda@shein.com', 'atendente', 2600.00),
-('rafael gomes', 'rafael@shein.com', 'supervisor', 4200.00);
-
--- ========================================
--- 5. tabela admins
--- ========================================
+-- admins
 create table admins (
     id_admin serial primary key,
     nome varchar(100),
@@ -61,13 +40,7 @@ create table admins (
     senha varchar(100)
 );
 
-insert into admins (nome, email, senha) values
-('admin1', 'admin1@shein.com', 'admin123'),
-('admin2', 'admin2@shein.com', 'admin456');
-
--- ========================================
--- 6. tabela produtos
--- ========================================
+-- produtos
 create table produtos (
     id_produto serial primary key,
     nome varchar(150),
@@ -77,16 +50,7 @@ create table produtos (
     descricao text
 );
 
-insert into produtos (nome, preco, id_categoria, estoque, descricao) values
-('blusa feminina rosa', 89.90, 1, 50, 'blusa casual de algodão'),
-('calça jeans masculina', 129.90, 2, 30, 'calça jeans azul escura'),
-('brinco de argola dourado', 19.90, 3, 100, 'brinco de bijuteria'),
-('tênis branco feminino', 179.90, 4, 20, 'tênis casual branco com sola alta'),
-('camiseta infantil', 49.90, 5, 40, 'camiseta divertida para crianças');
-
--- ========================================
--- 7. tabela pedidos
--- ========================================
+-- pedidos
 create table pedidos (
     id_pedido serial primary key,
     id_cliente integer references clientes(id_cliente),
@@ -94,14 +58,7 @@ create table pedidos (
     status varchar(50) default 'pendente'
 );
 
-insert into pedidos (id_cliente, data_pedido, status) values
-(1, '2025-07-01 10:30:00', 'pago'),
-(2, '2025-07-02 14:45:00', 'pago'),
-(3, '2025-07-03 16:00:00', 'pendente');
-
--- ========================================
--- 8. tabela itens do pedido
--- ========================================
+-- itens do pedido
 create table itens_pedido (
     id_item serial primary key,
     id_pedido integer references pedidos(id_pedido),
@@ -110,15 +67,7 @@ create table itens_pedido (
     preco_unitario numeric(10, 2)
 );
 
-insert into itens_pedido (id_pedido, id_produto, quantidade, preco_unitario) values
-(1, 1, 2, 89.90),
-(1, 3, 1, 19.90),
-(2, 2, 1, 129.90),
-(3, 5, 3, 49.90);
-
--- ========================================
--- 9. tabela pagamentos
--- ========================================
+-- pagamentos
 create table pagamentos (
     id_pagamento serial primary key,
     id_pedido integer references pedidos(id_pedido),
@@ -128,25 +77,16 @@ create table pagamentos (
     data_pagamento timestamp default current_timestamp
 );
 
-insert into pagamentos (id_pedido, metodo_pagamento, valor_total, status_pagamento) values
-(1, 'cartão de crédito', 199.70, 'pago'),
-(2, 'pix', 129.90, 'pago'),
-(3, 'boleto', 149.70, 'pendente');
-
--- ========================================
--- 11. tabela de favoritos dos clientes
--- ========================================
+-- favoritos
 create table favoritos (
     id_favorito serial primary key,
     id_cliente integer references clientes(id_cliente),
     id_produto integer references produtos(id_produto),
     data_adicionado timestamp default current_timestamp,
-    unique(id_cliente, id_produto) -- evita duplicatas
+    unique(id_cliente, id_produto)
 );
 
--- ========================================
--- 12. tabela carrinho de compras
--- ========================================
+-- carrinho
 create table carrinho (
     id_item_carrinho serial primary key,
     id_cliente integer references clientes(id_cliente),
@@ -157,15 +97,169 @@ create table carrinho (
     unique(id_cliente, id_produto)
 );
 
--- inserções exemplo de itens no carrinho
+-- moedas
+create table moedas (
+    id_moeda serial primary key,
+    sigla varchar(10) unique,
+    taxa_conversao numeric(10,4)
+);
+
+-- ========================================
+-- inserts
+-- ========================================
+
+-- categorias
+insert into categorias (nome) values
+('moda feminina'),
+('moda masculina'),
+('acessórios'),
+('calçados'),
+('infantil');
+
+-- clientes
+insert into clientes (nome, email, senha, pais) values
+('miguel teixeira', 'miguel@gmail.com', 'migs123', 'brasil'),
+('marlon franco', 'marlon@gmail.com', 'marlon123', 'portugal'),
+('cliente ficticio', 'cliente3@email.com', 'senha123', 'brasil');
+
+-- funcionarios
+insert into funcionarios (nome, email, cargo, salario) values
+('carlos alberto', 'carlos@shein.com', 'estoquista', 2800.00),
+('fernanda dias', 'fernanda@shein.com', 'atendente', 2600.00),
+('rafael gomes', 'rafael@shein.com', 'supervisor', 4200.00);
+
+-- admins
+insert into admins (nome, email, senha) values
+('admin1', 'admin1@shein.com', 'admin123'),
+('admin2', 'admin2@shein.com', 'admin456');
+
+-- produtos
+insert into produtos (nome, preco, id_categoria, estoque, descricao) values
+('blusa feminina rosa', 89.90, 1, 50, 'blusa casual de algodão'),
+('calça jeans masculina', 129.90, 2, 30, 'calça jeans azul escura'),
+('brinco de argola dourado', 19.90, 3, 100, 'brinco de bijuteria'),
+('tênis branco feminino', 179.90, 4, 20, 'tênis casual branco com sola alta'),
+('camiseta infantil', 49.90, 5, 40, 'camiseta divertida para crianças');
+
+-- pedidos
+insert into pedidos (id_cliente, data_pedido, status) values
+(1, '2025-07-01 10:30:00', 'pago'),
+(2, '2025-07-02 14:45:00', 'pago'),
+(3, '2025-07-03 16:00:00', 'pendente');
+
+-- itens do pedido
+insert into itens_pedido (id_pedido, id_produto, quantidade, preco_unitario) values
+(1, 1, 2, 89.90),
+(1, 3, 1, 19.90),
+(2, 2, 1, 129.90),
+(3, 5, 3, 49.90);
+
+-- pagamentos
+insert into pagamentos (id_pedido, metodo_pagamento, valor_total, status_pagamento) values
+(1, 'cartão de crédito', 199.70, 'pago'),
+(2, 'pix', 129.90, 'pago'),
+(3, 'boleto', 149.70, 'pendente');
+
+-- favoritos
+insert into favoritos (id_cliente, id_produto) values
+(1, 2),
+(1, 3),
+(2, 4);
+
+-- carrinho
 insert into carrinho (id_cliente, id_produto, quantidade, preco_unitario) values
 (1, 1, 1, 89.90),
 (1, 4, 2, 179.90),
 (2, 5, 3, 49.90);
 
+-- moedas
+insert into moedas (sigla, taxa_conversao) values
+('brl', 1.0000),
+('usd', 0.1900),
+('eur', 0.1700);
+
 -- ========================================
--- consulta: visualizar carrinho de um cliente
+-- views
 -- ========================================
+create or replace view produtos_convertidos as
+select 
+    p.id_produto,
+    p.nome,
+    m.sigla,
+    round(p.preco * m.taxa_conversao, 2) as preco_convertido
+from produtos p
+cross join moedas m;
+
+-- ========================================
+-- consultas
+-- ========================================
+
+-- nome e email dos clientes
+select nome, email from clientes where nome = 'miguel teixeira';
+
+-- país de cada cliente
+select nome, pais from clientes;
+
+-- data de cadastro dos clientes
+select nome, data_cadastro from clientes;
+
+-- pedidos com cliente, data e status
+select p.id_pedido, c.nome as cliente, p.data_pedido, p.status
+from pedidos p
+join clientes c on p.id_cliente = c.id_cliente;
+
+-- valor das compras e país
+select p.id_pedido, c.nome, c.pais as destino, pg.valor_total
+from pedidos p
+join clientes c on p.id_cliente = c.id_cliente
+join pagamentos pg on pg.id_pedido = p.id_pedido;
+
+-- métodos de pagamento
+select distinct metodo_pagamento from pagamentos;
+
+-- produtos comprados por cliente
+select c.nome as cliente, pr.nome as produto, ip.quantidade
+from itens_pedido ip
+join pedidos p on ip.id_pedido = p.id_pedido
+join clientes c on p.id_cliente = c.id_cliente
+join produtos pr on ip.id_produto = pr.id_produto
+order by cliente;
+
+-- últimos pedidos
+select c.nome as cliente, p.id_pedido, p.data_pedido, p.status
+from pedidos p
+join clientes c on p.id_cliente = c.id_cliente
+order by p.data_pedido desc;
+
+-- funcionário com maior salário
+select nome, cargo, salario
+from funcionarios
+order by salario desc
+limit 1;
+
+-- total de clientes por país
+select pais, count(*) as total_clientes
+from clientes
+group by pais;
+
+-- total de produtos por categoria
+select c.nome as categoria, count(*) as total_produtos
+from produtos p
+join categorias c on p.id_categoria = c.id_categoria
+group by c.nome;
+
+-- listar categorias
+select id_categoria, nome from categorias order by nome;
+
+-- produtos favoritos de um cliente
+select f.id_favorito, c.nome as cliente, p.nome as produto, f.data_adicionado
+from favoritos f
+join clientes c on f.id_cliente = c.id_cliente
+join produtos p on f.id_produto = p.id_produto
+where c.email = 'miguel@gmail.com'
+order by f.data_adicionado desc;
+
+-- itens no carrinho do cliente
 select c.nome as cliente, p.nome as produto, cr.quantidade, cr.preco_unitario,
        (cr.quantidade * cr.preco_unitario) as total_item, cr.data_adicionado
 from carrinho cr
@@ -174,77 +268,8 @@ join produtos p on cr.id_produto = p.id_produto
 where c.email = 'miguel@gmail.com'
 order by cr.data_adicionado desc;
 
--- Inserções exemplo de favoritos
-insert into favoritos (id_cliente, id_produto) values
-(1, 2), -- Miguel favoritou a calça jeans
-(1, 3), -- Miguel favoritou o brinco
-(2, 4); -- Marlon favoritou o tênis
+-- produtos em dólar
+select * from produtos_convertidos where sigla = 'usd';
 
--- ========================================
--- 10. consultas exemplo
--- ========================================
-
--- 10.1 nome e email dos clientes
-select nome, email from clientes
-where nome = 'miguel teixeira';
-
--- 10.2 país de cada cliente
-select nome, pais from clientes;
-
--- 10.3 data de cadastro dos clientes
-select nome, data_cadastro from clientes;
-
--- 10.4 todos os pedidos com cliente, data e status
-select p.id_pedido, c.nome as cliente, p.data_pedido, p.status
-from pedidos p
-join clientes c on p.id_cliente = c.id_cliente;
-
--- 10.5 valor das compras e país de destino
-select p.id_pedido, c.nome, c.pais as destino, pg.valor_total
-from pedidos p
-join clientes c on p.id_cliente = c.id_cliente
-join pagamentos pg on pg.id_pedido = p.id_pedido;
-
--- 10.6 métodos de pagamento utilizados
-select distinct metodo_pagamento from pagamentos;
-
--- 10.7 produtos comprados por cliente com nome e quantidade
-select c.nome as cliente, pr.nome as produto, ip.quantidade
-from itens_pedido ip
-join pedidos p on ip.id_pedido = p.id_pedido
-join clientes c on p.id_cliente = c.id_cliente
-join produtos pr on ip.id_produto = pr.id_produto
-order by cliente;
-
--- 10.8 últimos pedidos feitos (ordem decrescente)
-select c.nome as cliente, p.id_pedido, p.data_pedido, p.status
-from pedidos p
-join clientes c on p.id_cliente = c.id_cliente
-order by p.data_pedido desc;
-
--- 10.9 funcionário com maior salário
-select nome, cargo, salario
-from funcionarios
-order by salario desc
-limit 1;
-
--- 10.10 total de clientes por país
-select pais, count(*) as total_clientes
-from clientes
-group by pais;
-
--- 10.11 total de produtos por categoria
-select c.nome as categoria, count(*) as total_produtos
-from produtos p
-join categorias c on p.id_categoria = c.id_categoria
-group by c.nome;
-
--- lista todas as categorias
-select id_categoria, nome from categorias order by nome;
-
-select f.id_favorito, c.nome as cliente, p.nome as produto, f.data_adicionado
-from favoritos f
-join clientes c on f.id_cliente = c.id_cliente
-join produtos p on f.id_produto = p.id_produto
-where c.email = 'miguel@gmail.com'
-order by f.data_adicionado desc;
+-- produtos em euro
+select * from produtos_convertidos where sigla = 'eur';
