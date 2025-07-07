@@ -31,3 +31,4 @@ Este projeto traz uma estrutura simples e funcional, que inclui tabelas essencia
 - Tabelas relacionadas para refletir as operações de uma loja virtual  
 - Consultas SQL simples e avançadas, focando especialmente em relatórios para clientes  
 - Possibilidade de expandir com APIs, dashboards e integrações  
+https://www.canva.com/design/DAGsNBSqZAE/oD82Ca9RrjD9ANVz2RrcIA/edit?utm_content=DAGsNBSqZAE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
