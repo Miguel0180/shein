@@ -273,3 +273,37 @@ select * from produtos_convertidos where sigla = 'usd';
 
 -- produtos em euro
 select * from produtos_convertidos where sigla = 'eur';
+
+
+-------------------------------------------
+-- SISTEMA DE CUPOM 
+-------------------------------------------
+-- tabela de cupons
+create table cupons (
+    id_cupom serial primary key,
+    codigo varchar(50) unique not null,         -- código do cupom em letras minúsculas
+    tipo_desconto varchar(10) not null check (tipo_desconto in ('percentual', 'fixo')),  -- tipo do desconto
+    valor_desconto numeric(10, 2) not null,    -- valor do desconto (ex: 10 para 10% ou R$10,00)
+    data_validade date not null,
+    ativo boolean default true
+);
+
+-- tabela para registrar uso do cupom por cliente
+create table cupons_usados (
+    id_cupom_usado serial primary key,
+    id_cupom integer references cupons(id_cupom),
+    id_cliente integer references clientes(id_cliente),
+    data_uso timestamp default current_timestamp,
+    unique(id_cupom, id_cliente)
+);
+
+-- inserts exemplo de cupons
+insert into cupons (codigo, tipo_desconto, valor_desconto, data_validade) values
+('desconto10', 'percentual', 10, '2025-12-31'),
+('fixo20', 'fixo', 20, '2025-10-31');
+
+-- consulta para cupons ativos
+select codigo, tipo_desconto, valor_desconto, data_validade
+from cupons
+where ativo = true and data_validade >= current_date
+order by data_validade;
